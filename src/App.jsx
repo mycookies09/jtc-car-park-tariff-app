@@ -1,6 +1,12 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { openOrInitDb, readState, writeState, persist, exportBytes, createDb } from "./db";
 
 const NL = String.fromCharCode(10);
+
+const DEFAULT_USERS = [
+  { userId: "fems", password: "P@ssw0rd1", role: "user", mustChangePassword: true },
+  { userId: "admin", password: "admin", role: "admin", mustChangePassword: true },
+];
 
 const COLORS = {
   primary: "#0057B8",
@@ -982,7 +988,7 @@ function ManageCarParksPage({ carParks, setCarParks }) {
   );
 }
 
-function AccountPage({ currentUser, users, setUsers }) {
+function AccountPage({ currentUser, users, setUsers, onExportDb, onImportDb }) {
   const isAdmin = currentUser.role === "admin";
   const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
@@ -991,6 +997,16 @@ function AccountPage({ currentUser, users, setUsers }) {
   const [resetUser, setResetUser] = useState("");
   const [resetPw, setResetPw] = useState("");
   const [resetMsg, setResetMsg] = useState("");
+  const [importMsg, setImportMsg] = useState("");
+
+  function handleImportFile(e) {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!window.confirm("Loading a database file replaces all current tariffs, car parks and user accounts, and will sign you out. Continue?")) return;
+    setImportMsg("Loading…");
+    onImportDb(file).catch(() => setImportMsg("Could not read that file. Make sure it's a .sqlite database exported from this app."));
+  }
 
   function changeOwn() {
     setMsg(""); setErr("");
@@ -1027,6 +1043,21 @@ function AccountPage({ currentUser, users, setUsers }) {
         <Button onClick={changeOwn}>Update password</Button>
       </div>
 
+      <div style={{ background: COLORS.panel, borderRadius: 10, padding: 18, marginBottom: 22, maxWidth: 420 }}>
+        <h3 style={{ fontSize: 15, margin: "0 0 12px" }}>Database</h3>
+        <p style={{ fontSize: 12.5, color: COLORS.muted, margin: "0 0 14px", lineHeight: 1.5 }}>
+          All data is saved automatically to a SQLite database in this browser. Download a backup to move it to another machine or browser.
+        </p>
+        <Button variant="ghost" onClick={onExportDb}>Download database (.sqlite)</Button>
+        {isAdmin ? (
+          <div style={{ marginTop: 16 }}>
+            <label style={labelStyle}>Load database (.sqlite) — admin only</label>
+            <Banner kind="error" onClose={() => setImportMsg("")}>{importMsg}</Banner>
+            <input type="file" accept=".sqlite,.db" onChange={handleImportFile} style={{ fontSize: 13 }} />
+          </div>
+        ) : null}
+      </div>
+
       {isAdmin ? (
         <div style={{ background: COLORS.panel, borderRadius: 10, padding: 18, maxWidth: 420 }}>
           <h3 style={{ fontSize: 15, margin: "0 0 12px" }}>Admin — reset a user password</h3>
@@ -1048,14 +1079,67 @@ function AccountPage({ currentUser, users, setUsers }) {
 }
 
 export default function App() {
-  const [users, setUsers] = useState([
-    { userId: "fems", password: "P@ssw0rd1", role: "user", mustChangePassword: true },
-    { userId: "admin", password: "admin", role: "admin", mustChangePassword: true },
-  ]);
+  const dbRef = useRef(null);
+  const [dbReady, setDbReady] = useState(false);
+  const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [tariffs, setTariffs] = useState(SEED_TARIFFS);
-  const [carParks, setCarParks] = useState(SEED_CAR_PARKS);
+  const [tariffs, setTariffs] = useState([]);
+  const [carParks, setCarParks] = useState([]);
   const [page, setPage] = useState("tariff");
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const db = await openOrInitDb(DEFAULT_USERS, SEED_TARIFFS, SEED_CAR_PARKS);
+      if (cancelled) return;
+      dbRef.current = db;
+      const state = readState(db);
+      setUsers(state.users);
+      setTariffs(state.tariffs);
+      setCarParks(state.carParks);
+      setDbReady(true);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    if (!dbReady) return;
+    const db = dbRef.current;
+    writeState(db, users, tariffs, carParks);
+    persist(db);
+  }, [dbReady, users, tariffs, carParks]);
+
+  function handleExportDb() {
+    const bytes = exportBytes(dbRef.current);
+    const blob = new Blob([bytes], { type: "application/x-sqlite3" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "jtc-car-park-tariff.sqlite";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  async function handleImportDb(file) {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const db = await createDb(bytes);
+    const state = readState(db);
+    dbRef.current = db;
+    setUsers(state.users);
+    setTariffs(state.tariffs);
+    setCarParks(state.carParks);
+    setCurrentUser(null);
+  }
+
+  if (!dbReady) {
+    return (
+      <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.muted, fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif" }}>
+        Loading database…
+      </div>
+    );
+  }
 
   if (!currentUser) {
     return <LoginPage users={users} onLogin={(u) => { setCurrentUser(u); setPage("tariff"); }} />;
@@ -1101,13 +1185,13 @@ export default function App() {
 
       <div style={{ maxWidth: 1080, margin: "0 auto", padding: "26px 20px" }}>
         <div style={{ background: "#FFFBEA", border: "1px solid #E6CE7A", borderRadius: 8, padding: "9px 12px", fontSize: 12.5, color: "#6B5414", marginBottom: 20 }}>
-          MVP build. Data is held in memory for this session and resets on full page reload. MVP assumptions: URA day-codes 1–5 use Mon-Fri values, 6 = Sat, 7 = Sun/PH; first two short-term rows map to bands 1 and 2 (extra short-term rows ignored); cap times derive from the capped row's own operating hours; the hourly-charges narrative shows the Mon-Fri value.
+          MVP build. Data is saved automatically to a SQLite database in this browser and survives page reloads. Use Account → Database to download a portable .sqlite backup or load one on another machine. MVP assumptions: URA day-codes 1–5 use Mon-Fri values, 6 = Sat, 7 = Sun/PH; first two short-term rows map to bands 1 and 2 (extra short-term rows ignored); cap times derive from the capped row's own operating hours; the hourly-charges narrative shows the Mon-Fri value.
         </div>
 
         {page === "tariff" ? <TariffPage tariffs={tariffs} setTariffs={setTariffs} carParks={carParks} /> : null}
         {page === "manage" ? <ManageCarParksPage carParks={carParks} setCarParks={setCarParks} /> : null}
         {page === "carpark" ? <CarParkPage tariffs={tariffs} carParks={carParks} setCarParks={setCarParks} /> : null}
-        {page === "account" ? <AccountPage currentUser={currentUser} users={users} setUsers={setUsers} /> : null}
+        {page === "account" ? <AccountPage currentUser={currentUser} users={users} setUsers={setUsers} onExportDb={handleExportDb} onImportDb={handleImportDb} /> : null}
       </div>
     </div>
   );
