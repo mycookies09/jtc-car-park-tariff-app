@@ -252,34 +252,34 @@ const SEED_TARIFFS = [
 ];
 
 const SEED_CAR_PARKS = [
-  { carParkNo: "A1004", address: "Ang Mo Kio JTC Industrial Park 2 (HV)", tariffCar: "JTCC01", tariffMc: "JTCM01", tariffHv: "JTCH01" },
-  { carParkNo: "A1003", address: "Ang Mo Kio JTC Industrial Park 2", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH01" },
-  { carParkNo: "A1002", address: "Ang Mo Kio JTC Industrial Park 1", tariffCar: "JTCC03", tariffMc: "JTCM02", tariffHv: "JTCH02" },
-  { carParkNo: "A1000", address: "Alexandra Village JTC Industrial Park", tariffCar: "JTCC04", tariffMc: "JTCM03", tariffHv: "JTCH03" },
-  { carParkNo: "D1000", address: "Depot Lane JTC Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH04" },
-  { carParkNo: "E1000", address: "Eunos JTC Industrial Estate", tariffCar: "JTCC03", tariffMc: "JTCM04", tariffHv: "JTCH02" },
-  { carParkNo: "A1001", address: "Aljunied Ave JTC Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH05" },
-  { carParkNo: "U1001", address: "Ubi JTC Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "" },
-  { carParkNo: "J1000", address: "JTC Ubi Ave 4", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "" },
-  { carParkNo: "D1010", address: "Defu JTC Industrial Estate Lane 10", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH02" },
-  { carParkNo: "D1007", address: "Defu JTC Industrial Estate Lane 7", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "D1008", address: "Defu JTC Industrial Estate Lane 8", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "D1009", address: "Defu JTC Industrial Estate Lane 9", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "D1011", address: "Defu JTC Industrial Estate Lane 11", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "D1012", address: "Defu JTC Industrial Estate Lane 12", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "D1001", address: "Defu JTC Industrial Estate Lane 1", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "D1002", address: "Defu JTC Industrial Estate Lane 2", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "D1003", address: "Defu JTC Industrial Estate Lane 3", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "D1005", address: "Defu JTC Industrial Estate Lane 5", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "D1006", address: "Defu JTC Industrial Estate Lane 6", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "Y1000", address: "Yishun JTC Industrial Park A", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH02" },
-  { carParkNo: "G1000", address: "Geylang Bahru JTC Industrial Estate", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH07" },
-  { carParkNo: "T1000", address: "Toa Payoh JTC Industrial Park Blk1", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "" },
-  { carParkNo: "T1001", address: "Toa Payoh JTC Industrial Park Blk1002", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "" },
-  { carParkNo: "T1002", address: "Toa Payoh JTC Industrial Park Blk1003", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH02" },
-  { carParkNo: "M1000", address: "Marsiling JTC Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH02" },
-  { carParkNo: "W1000", address: "Woodlands JTC Industrial Park E", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH08" },
-  { carParkNo: "S1000", address: "Sin Ming JTC Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH09" },
+  { carParkNo: "AK83", address: "BLK 5022 TO 5095 Ang Mo Kio Industrial Park 2 (heavy vehicle only)", tariffCar: "JTCC01", tariffMc: "JTCM01", tariffHv: "JTCH01" },
+  { carParkNo: "A83", address: "BLK 5022 TO 5095 Ang Mo Kio Industrial Park 2", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH01" },
+  { carParkNo: "A86", address: "BLK 4001-4003/4026-4028/ Ang Mo Kio Industrial Park 1", tariffCar: "JTCC03", tariffMc: "JTCM02", tariffHv: "JTCH02" },
+  { carParkNo: "AV2", address: "BLK 1001/1010 Alexandra Village Industrial Park", tariffCar: "JTCC04", tariffMc: "JTCM03", tariffHv: "JTCH03" },
+  { carParkNo: "TB27", address: "BLK 4001- 4008 Depot Lane Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH04" },
+  { carParkNo: "EI1", address: "BLK 1001- 1085 Eunos Industrial Estate", tariffCar: "JTCC03", tariffMc: "JTCM04", tariffHv: "JTCH02" },
+  { carParkNo: "GE1D", address: "BLK 1005 - 1012 Aljunied Ave Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH05" },
+  { carParkNo: "KU5", address: "BLK 3004-3007, Ubi Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "" },
+  { carParkNo: "UBA4", address: "Ubi Avenue 4", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "" },
+  { carParkNo: "HG40", address: "BLK 1 TO 32, 37 TO 38 DEFU LANE 10 Defu Industrial Estate (Defu Lane 10)", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH02" },
+  { carParkNo: "HG57", address: "DEFU LANE 7 Defu Industrial Estate (Defu Lane 7)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "HG58", address: "DEFU LANE 8 Defu Industrial Estate (Defu Lane 8)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "HG59", address: "DEFU LANE 9 Defu Industrial Estate (Defu Lane 9)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "HG65", address: "DEFU LANE 11 Defu Industrial Estate (Defu Lane 11)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "HG66", address: "DEFU LANE 12 Defu Industrial Estate (Defu Lane 12)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "HG81", address: "DEFU LANE 1 Defu Industrial Estate (Defu Lane 1)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "HG82", address: "DEFU LANE 2 Defu Industrial Estate (Defu Lane 2)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "HG83", address: "DEFU LANE 3 Defu Industrial Estate (Defu Lane 3)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "HG84", address: "DEFU LANE 5 Defu Industrial Estate (Defu Lane 5)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "HG85", address: "DEFU LANE 6 Defu Industrial Estate (Defu Lane 6)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "Y22", address: "BLK 1001/1019,1023/1024 Yishun Industrial Park A", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH02" },
+  { carParkNo: "KB6", address: "BLK 74/92 Geylang Bahru Industrial Estate", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH07" },
+  { carParkNo: "TP56", address: "BLK 1 TO 21 Toa Payoh Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "" },
+  { carParkNo: "TP57", address: "BLK 1002 TO 1004 Toa Payoh Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "" },
+  { carParkNo: "TP59", address: "BLK 1003/1004 Toa Payoh Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH02" },
+  { carParkNo: "W16", address: "Marsiling Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH02" },
+  { carParkNo: "W47", address: "Woodlands Industrial Park E", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH08" },
+  { carParkNo: "SM5", address: "Blk 1,7-10 and Blk 28-33, 36 Sin Ming Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH09" },
 ];
 
 function newRow() {
@@ -793,7 +793,7 @@ function CarParkPage({ tariffs, carParks, setCarParks }) {
             value={search}
             onChange={(e) => { setSearch(e.target.value); setOpen(true); setSelectedNo(""); }}
             onFocus={() => setOpen(true)}
-            placeholder="Type A1002 or ANG MO KIO…"
+            placeholder="Type AK83 or ANG MO KIO…"
           />
           {open && filtered.length > 0 ? (
             <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "#fff", border: "1px solid " + COLORS.border, borderRadius: 6, marginTop: 4, zIndex: 20, maxHeight: 220, overflowY: "auto", boxShadow: "0 6px 16px rgba(0,40,90,0.12)" }}>
@@ -939,7 +939,7 @@ function ManageCarParksPage({ carParks, setCarParks }) {
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 16 }}>
           <div style={{ flex: "1 1 200px" }}>
             <label style={labelStyle}>Car Park No (primary key)</label>
-            <input style={inputStyle} value={carParkNo} onChange={(e) => setCarParkNo(e.target.value)} placeholder="e.g. A1004" />
+            <input style={inputStyle} value={carParkNo} onChange={(e) => setCarParkNo(e.target.value)} placeholder="e.g. AK83" />
           </div>
           <div style={{ flex: "2 1 360px" }}>
             <label style={labelStyle}>Address / parking place</label>
