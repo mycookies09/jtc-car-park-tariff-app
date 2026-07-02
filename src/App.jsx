@@ -167,7 +167,7 @@ function LoginPage({ users, onLogin }) {
   function submit() {
     const u = users.find((x) => x.userId.toLowerCase() === userId.trim().toLowerCase());
     if (!u || u.password !== password) {
-      setError("Incorrect user ID or password. Try fems / P@ssw0rd1 or admin / admin.");
+      setError("Incorrect user ID or password.");
       return;
     }
     setError("");
@@ -188,9 +188,39 @@ function LoginPage({ users, onLogin }) {
         <input type="password" style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} placeholder="••••••••" />
         <div style={{ height: 20 }} />
         <Button onClick={submit} style={{ width: "100%" }}>Sign in</Button>
-        <p style={{ fontSize: 12, color: COLORS.muted, marginTop: 16, lineHeight: 1.5 }}>
-          Default user: fems / P@ssw0rd1{NL}Admin: admin / admin
-        </p>
+      </div>
+    </div>
+  );
+}
+
+function ForceChangePasswordPage({ currentUser, setUsers, setCurrentUser }) {
+  const [newPw, setNewPw] = useState("");
+  const [confirmPw, setConfirmPw] = useState("");
+  const [error, setError] = useState("");
+
+  function submit() {
+    if (!newPw.trim()) { setError("Enter a new password."); return; }
+    if (newPw === currentUser.password) { setError("New password must be different from your current password."); return; }
+    if (newPw !== confirmPw) { setError("Passwords do not match."); return; }
+    const updated = { ...currentUser, password: newPw, mustChangePassword: false };
+    setUsers((prev) => prev.map((u) => (u.userId === currentUser.userId ? updated : u)));
+    setCurrentUser(updated);
+  }
+
+  return (
+    <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ width: 380, background: "#fff", borderRadius: 12, border: "1px solid " + COLORS.border, padding: 28, boxShadow: "0 4px 18px rgba(0,40,90,0.08)" }}>
+        <div style={{ height: 6, width: 48, background: COLORS.teal, borderRadius: 3, marginBottom: 18 }} />
+        <h1 style={{ fontSize: 20, color: COLORS.primary, margin: "0 0 4px" }}>Set a new password</h1>
+        <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 20px" }}>This is your first sign-in. Choose a new password before continuing.</p>
+        <Banner kind="error" onClose={() => setError("")}>{error}</Banner>
+        <label style={labelStyle}>New password</label>
+        <input type="password" style={inputStyle} value={newPw} onChange={(e) => setNewPw(e.target.value)} />
+        <div style={{ height: 14 }} />
+        <label style={labelStyle}>Confirm new password</label>
+        <input type="password" style={inputStyle} value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+        <div style={{ height: 20 }} />
+        <Button onClick={submit} style={{ width: "100%" }}>Set password &amp; continue</Button>
       </div>
     </div>
   );
@@ -730,8 +760,9 @@ function AccountPage({ currentUser, users, setUsers }) {
     setMsg(""); setErr("");
     if (currentUser.password !== oldPw) { setErr("Current password is incorrect."); return; }
     if (!newPw.trim()) { setErr("Enter a new password."); return; }
-    setUsers((prev) => prev.map((u) => (u.userId === currentUser.userId ? { ...u, password: newPw } : u)));
+    setUsers((prev) => prev.map((u) => (u.userId === currentUser.userId ? { ...u, password: newPw, mustChangePassword: false } : u)));
     currentUser.password = newPw;
+    currentUser.mustChangePassword = false;
     setOldPw(""); setNewPw("");
     setMsg("Your password has been changed.");
   }
@@ -739,9 +770,9 @@ function AccountPage({ currentUser, users, setUsers }) {
   function adminReset() {
     setResetMsg("");
     if (!resetUser || !resetPw.trim()) { setResetMsg("Select a user and enter a new password."); return; }
-    setUsers((prev) => prev.map((u) => (u.userId === resetUser ? { ...u, password: resetPw } : u)));
+    setUsers((prev) => prev.map((u) => (u.userId === resetUser ? { ...u, password: resetPw, mustChangePassword: true } : u)));
     setResetPw("");
-    setResetMsg("Password reset for " + resetUser + ".");
+    setResetMsg("Password reset for " + resetUser + ". They will be asked to set a new password on next sign-in.");
   }
 
   return (
@@ -782,8 +813,8 @@ function AccountPage({ currentUser, users, setUsers }) {
 
 export default function App() {
   const [users, setUsers] = useState([
-    { userId: "fems", password: "P@ssw0rd1", role: "user" },
-    { userId: "admin", password: "admin", role: "admin" },
+    { userId: "fems", password: "P@ssw0rd1", role: "user", mustChangePassword: true },
+    { userId: "admin", password: "admin", role: "admin", mustChangePassword: true },
   ]);
   const [currentUser, setCurrentUser] = useState(null);
   const [tariffs, setTariffs] = useState([]);
@@ -792,6 +823,10 @@ export default function App() {
 
   if (!currentUser) {
     return <LoginPage users={users} onLogin={(u) => { setCurrentUser(u); setPage("tariff"); }} />;
+  }
+
+  if (currentUser.mustChangePassword) {
+    return <ForceChangePasswordPage currentUser={currentUser} setUsers={setUsers} setCurrentUser={setCurrentUser} />;
   }
 
   const navItems = [
