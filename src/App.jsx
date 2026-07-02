@@ -40,7 +40,7 @@ const DAY_CODE_MAP = [
 
 const SEED_TARIFFS = [
   {
-    tariffId: "JTCC01",
+    tariffId: "JTCC001",
     vehicleType: "C - Car",
     rows: [
       { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
@@ -50,7 +50,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCM01",
+    tariffId: "JTCM001",
     vehicleType: "M - Motorcycle",
     rows: [
       { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
@@ -60,7 +60,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH01",
+    tariffId: "JTCH001",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
@@ -70,7 +70,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCC02",
+    tariffId: "JTCC002",
     vehicleType: "C - Car",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "Free Parking" },
@@ -80,7 +80,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCM02",
+    tariffId: "JTCM002",
     vehicleType: "M - Motorcycle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "Free Parking" },
@@ -90,7 +90,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCC03",
+    tariffId: "JTCC003",
     vehicleType: "C - Car",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "Free Parking" },
@@ -100,7 +100,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH02",
+    tariffId: "JTCH002",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Free Parking" },
@@ -110,7 +110,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCC04",
+    tariffId: "JTCC004",
     vehicleType: "C - Car",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "60c/30min" },
@@ -120,7 +120,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCM03",
+    tariffId: "JTCM003",
     vehicleType: "M - Motorcycle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "0.10/30min" },
@@ -130,7 +130,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH03",
+    tariffId: "JTCH003",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "120c/ 30min" },
@@ -140,7 +140,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH04",
+    tariffId: "JTCH004",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Free Parking" },
@@ -150,7 +150,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCM04",
+    tariffId: "JTCM004",
     vehicleType: "M - Motorcycle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "Free Parking" },
@@ -160,7 +160,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH05",
+    tariffId: "JTCH005",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0730 to 1900", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
@@ -170,7 +170,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCC05",
+    tariffId: "JTCC005",
     vehicleType: "C - Car",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "Free Parking" },
@@ -180,7 +180,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCM05",
+    tariffId: "JTCM005",
     vehicleType: "M - Motorcycle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "Free Parking" },
@@ -190,7 +190,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCC06",
+    tariffId: "JTCC006",
     vehicleType: "C - Car",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "60c/30min" },
@@ -200,7 +200,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH06",
+    tariffId: "JTCH006",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "120c/ 30min" },
@@ -210,7 +210,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCM06",
+    tariffId: "JTCM006",
     vehicleType: "M - Motorcycle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "0.10/30min" },
@@ -220,7 +220,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH07",
+    tariffId: "JTCH007",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Reserved Parking" },
@@ -230,7 +230,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH08",
+    tariffId: "JTCH008",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0700 to 1900", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Reserved Parking" },
@@ -240,7 +240,7 @@ const SEED_TARIFFS = [
     ],
   },
   {
-    tariffId: "JTCH09",
+    tariffId: "JTCH009",
     vehicleType: "H - Heavy Vehicle",
     rows: [
       { opHours: "0730 to 1900", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Reserved Parking" },
@@ -252,34 +252,34 @@ const SEED_TARIFFS = [
 ];
 
 const SEED_CAR_PARKS = [
-  { carParkNo: "AK83", address: "BLK 5022 TO 5095 Ang Mo Kio Industrial Park 2 (heavy vehicle only)", tariffCar: "JTCC01", tariffMc: "JTCM01", tariffHv: "JTCH01" },
-  { carParkNo: "A83", address: "BLK 5022 TO 5095 Ang Mo Kio Industrial Park 2", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH01" },
-  { carParkNo: "A86", address: "BLK 4001-4003/4026-4028/ Ang Mo Kio Industrial Park 1", tariffCar: "JTCC03", tariffMc: "JTCM02", tariffHv: "JTCH02" },
-  { carParkNo: "AV2", address: "BLK 1001/1010 Alexandra Village Industrial Park", tariffCar: "JTCC04", tariffMc: "JTCM03", tariffHv: "JTCH03" },
-  { carParkNo: "TB27", address: "BLK 4001- 4008 Depot Lane Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH04" },
-  { carParkNo: "EI1", address: "BLK 1001- 1085 Eunos Industrial Estate", tariffCar: "JTCC03", tariffMc: "JTCM04", tariffHv: "JTCH02" },
-  { carParkNo: "GE1D", address: "BLK 1005 - 1012 Aljunied Ave Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH05" },
-  { carParkNo: "KU5", address: "BLK 3004-3007, Ubi Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "" },
-  { carParkNo: "UBA4", address: "Ubi Avenue 4", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "" },
-  { carParkNo: "HG40", address: "BLK 1 TO 32, 37 TO 38 DEFU LANE 10 Defu Industrial Estate (Defu Lane 10)", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH02" },
-  { carParkNo: "HG57", address: "DEFU LANE 7 Defu Industrial Estate (Defu Lane 7)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "HG58", address: "DEFU LANE 8 Defu Industrial Estate (Defu Lane 8)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "HG59", address: "DEFU LANE 9 Defu Industrial Estate (Defu Lane 9)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "HG65", address: "DEFU LANE 11 Defu Industrial Estate (Defu Lane 11)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "HG66", address: "DEFU LANE 12 Defu Industrial Estate (Defu Lane 12)", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
-  { carParkNo: "HG81", address: "DEFU LANE 1 Defu Industrial Estate (Defu Lane 1)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "HG82", address: "DEFU LANE 2 Defu Industrial Estate (Defu Lane 2)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "HG83", address: "DEFU LANE 3 Defu Industrial Estate (Defu Lane 3)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "HG84", address: "DEFU LANE 5 Defu Industrial Estate (Defu Lane 5)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "HG85", address: "DEFU LANE 6 Defu Industrial Estate (Defu Lane 6)", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
-  { carParkNo: "Y22", address: "BLK 1001/1019,1023/1024 Yishun Industrial Park A", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH02" },
-  { carParkNo: "KB6", address: "BLK 74/92 Geylang Bahru Industrial Estate", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH07" },
-  { carParkNo: "TP56", address: "BLK 1 TO 21 Toa Payoh Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "" },
-  { carParkNo: "TP57", address: "BLK 1002 TO 1004 Toa Payoh Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "" },
-  { carParkNo: "TP59", address: "BLK 1003/1004 Toa Payoh Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH02" },
-  { carParkNo: "W16", address: "Marsiling Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH02" },
-  { carParkNo: "W47", address: "Woodlands Industrial Park E", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH08" },
-  { carParkNo: "SM5", address: "Blk 1,7-10 and Blk 28-33, 36 Sin Ming Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH09" },
+  { carParkNo: "AK83", address: "BLK 5022 TO 5095 Ang Mo Kio Industrial Park 2 (heavy vehicle only)", tariffCar: "JTCC001", tariffMc: "JTCM001", tariffHv: "JTCH001" },
+  { carParkNo: "A83", address: "BLK 5022 TO 5095 Ang Mo Kio Industrial Park 2", tariffCar: "JTCC002", tariffMc: "JTCM002", tariffHv: "JTCH001" },
+  { carParkNo: "A86", address: "BLK 4001-4003/4026-4028/ Ang Mo Kio Industrial Park 1", tariffCar: "JTCC003", tariffMc: "JTCM002", tariffHv: "JTCH002" },
+  { carParkNo: "AV2", address: "BLK 1001/1010 Alexandra Village Industrial Park", tariffCar: "JTCC004", tariffMc: "JTCM003", tariffHv: "JTCH003" },
+  { carParkNo: "TB27", address: "BLK 4001- 4008 Depot Lane Industrial Park", tariffCar: "JTCC002", tariffMc: "JTCM002", tariffHv: "JTCH004" },
+  { carParkNo: "EI1", address: "BLK 1001- 1085 Eunos Industrial Estate", tariffCar: "JTCC003", tariffMc: "JTCM004", tariffHv: "JTCH002" },
+  { carParkNo: "GE1D", address: "BLK 1005 - 1012 Aljunied Ave Industrial Park", tariffCar: "JTCC002", tariffMc: "JTCM002", tariffHv: "JTCH005" },
+  { carParkNo: "KU5", address: "BLK 3004-3007, Ubi Industrial Estate", tariffCar: "JTCC005", tariffMc: "JTCM005", tariffHv: "" },
+  { carParkNo: "UBA4", address: "Ubi Avenue 4", tariffCar: "JTCC005", tariffMc: "JTCM005", tariffHv: "" },
+  { carParkNo: "HG40", address: "BLK 1 TO 32, 37 TO 38 DEFU LANE 10 Defu Industrial Estate (Defu Lane 10)", tariffCar: "JTCC002", tariffMc: "JTCM002", tariffHv: "JTCH002" },
+  { carParkNo: "HG57", address: "DEFU LANE 7 Defu Industrial Estate (Defu Lane 7)", tariffCar: "JTCC006", tariffMc: "", tariffHv: "JTCH006" },
+  { carParkNo: "HG58", address: "DEFU LANE 8 Defu Industrial Estate (Defu Lane 8)", tariffCar: "JTCC006", tariffMc: "", tariffHv: "JTCH006" },
+  { carParkNo: "HG59", address: "DEFU LANE 9 Defu Industrial Estate (Defu Lane 9)", tariffCar: "JTCC006", tariffMc: "", tariffHv: "JTCH006" },
+  { carParkNo: "HG65", address: "DEFU LANE 11 Defu Industrial Estate (Defu Lane 11)", tariffCar: "JTCC006", tariffMc: "", tariffHv: "JTCH006" },
+  { carParkNo: "HG66", address: "DEFU LANE 12 Defu Industrial Estate (Defu Lane 12)", tariffCar: "JTCC006", tariffMc: "", tariffHv: "JTCH006" },
+  { carParkNo: "HG81", address: "DEFU LANE 1 Defu Industrial Estate (Defu Lane 1)", tariffCar: "JTCC006", tariffMc: "JTCM006", tariffHv: "JTCH006" },
+  { carParkNo: "HG82", address: "DEFU LANE 2 Defu Industrial Estate (Defu Lane 2)", tariffCar: "JTCC006", tariffMc: "JTCM006", tariffHv: "JTCH006" },
+  { carParkNo: "HG83", address: "DEFU LANE 3 Defu Industrial Estate (Defu Lane 3)", tariffCar: "JTCC006", tariffMc: "JTCM006", tariffHv: "JTCH006" },
+  { carParkNo: "HG84", address: "DEFU LANE 5 Defu Industrial Estate (Defu Lane 5)", tariffCar: "JTCC006", tariffMc: "JTCM006", tariffHv: "JTCH006" },
+  { carParkNo: "HG85", address: "DEFU LANE 6 Defu Industrial Estate (Defu Lane 6)", tariffCar: "JTCC006", tariffMc: "JTCM006", tariffHv: "JTCH006" },
+  { carParkNo: "Y22", address: "BLK 1001/1019,1023/1024 Yishun Industrial Park A", tariffCar: "JTCC005", tariffMc: "JTCM005", tariffHv: "JTCH002" },
+  { carParkNo: "KB6", address: "BLK 74/92 Geylang Bahru Industrial Estate", tariffCar: "JTCC002", tariffMc: "JTCM002", tariffHv: "JTCH007" },
+  { carParkNo: "TP56", address: "BLK 1 TO 21 Toa Payoh Industrial Park", tariffCar: "JTCC002", tariffMc: "JTCM002", tariffHv: "" },
+  { carParkNo: "TP57", address: "BLK 1002 TO 1004 Toa Payoh Industrial Park", tariffCar: "JTCC002", tariffMc: "JTCM002", tariffHv: "" },
+  { carParkNo: "TP59", address: "BLK 1003/1004 Toa Payoh Industrial Park", tariffCar: "JTCC002", tariffMc: "JTCM002", tariffHv: "JTCH002" },
+  { carParkNo: "W16", address: "Marsiling Industrial Estate", tariffCar: "JTCC005", tariffMc: "JTCM005", tariffHv: "JTCH002" },
+  { carParkNo: "W47", address: "Woodlands Industrial Park E", tariffCar: "JTCC006", tariffMc: "", tariffHv: "JTCH008" },
+  { carParkNo: "SM5", address: "Blk 1,7-10 and Blk 28-33, 36 Sin Ming Industrial Estate", tariffCar: "JTCC005", tariffMc: "JTCM005", tariffHv: "JTCH009" },
 ];
 
 function newRow() {
