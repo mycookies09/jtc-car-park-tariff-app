@@ -32,12 +32,248 @@ const DAY_CODE_MAP = [
   { code: 7, label: "Sunday / Public Holiday", src: "sunPh" },
 ];
 
-const SAMPLE_CAR_PARKS = [
-  { carParkNo: "A1002", address: "BLK 4001-4003/4026-4028/4033-4035 ANG MO KIO INDUSTRIAL PARK 1", tariffCar: "", tariffMc: "", tariffHv: "" },
-  { carParkNo: "A1003", address: "BLK 5022 TO 5095 ANG MO KIO INDUSTRIAL PARK 2", tariffCar: "", tariffMc: "", tariffHv: "" },
-  { carParkNo: "A1000", address: "BLK 1001/1010 BUKIT MERAH LANE 1/3", tariffCar: "", tariffMc: "", tariffHv: "" },
-  { carParkNo: "D1000", address: "BLK 4001-4008 DEPOT LANE", tariffCar: "", tariffMc: "", tariffHv: "" },
-  { carParkNo: "E1000", address: "BLK 1001-1085 EUNOS INDUSTRIAL ESTATE", tariffCar: "", tariffMc: "", tariffHv: "" },
+const SEED_TARIFFS = [
+  {
+    tariffId: "JTCC01",
+    vehicleType: "C - Car",
+    rows: [
+      { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Day Capped rate (if any)", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Night Capped rate (if any)", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
+    ],
+  },
+  {
+    tariffId: "JTCM01",
+    vehicleType: "M - Motorcycle",
+    rows: [
+      { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Day Capped rate (if any)", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Night Capped rate (if any)", monFri: "No scheme", sat: "No scheme", sunPh: "No scheme" },
+    ],
+  },
+  {
+    tariffId: "JTCH01",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Day Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "0700 to 0700 (24hours)", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCC02",
+    vehicleType: "C - Car",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "Free Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "12", sat: "12", sunPh: "Free Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "60c/30min" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "5", sat: "5", sunPh: "5" },
+    ],
+  },
+  {
+    tariffId: "JTCM02",
+    vehicleType: "M - Motorcycle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "Free Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "65c/ day", sat: "65c/ day", sunPh: "Free Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "0.10/30min" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "65c/ day", sat: "65c/ day", sunPh: "65c/ day" },
+    ],
+  },
+  {
+    tariffId: "JTCC03",
+    vehicleType: "C - Car",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "Free Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "12", sat: "12", sunPh: "Free Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "60c/30min" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "5" },
+    ],
+  },
+  {
+    tariffId: "JTCH02",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Free Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "24", sat: "24", sunPh: "Free Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCC04",
+    vehicleType: "C - Car",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "60c/30min" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "12", sat: "12", sunPh: "12" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "60c/30min" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "5", sat: "5", sunPh: "5" },
+    ],
+  },
+  {
+    tariffId: "JTCM03",
+    vehicleType: "M - Motorcycle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "0.10/30min" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "65c/ day", sat: "65c/ day", sunPh: "65c/ day" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "0.10/30min" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "65c/ day", sat: "65c/ day", sunPh: "65c/ day" },
+    ],
+  },
+  {
+    tariffId: "JTCH03",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "120c/ 30min" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "24", sat: "24", sunPh: "24" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "120c/ 30min" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "10", sat: "10", sunPh: "10" },
+    ],
+  },
+  {
+    tariffId: "JTCH04",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Free Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "24", sat: "24", sunPh: "Free Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "120c/ 30min" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "10", sat: "10", sunPh: "10" },
+    ],
+  },
+  {
+    tariffId: "JTCM04",
+    vehicleType: "M - Motorcycle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "Free Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "65c/ day", sat: "65c/ day", sunPh: "Free Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "65c/ day" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "65c/ day" },
+    ],
+  },
+  {
+    tariffId: "JTCH05",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0730 to 1900", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "0730 to 1900", mode: "Day Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "1900 to 0730", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "1900 to 0730", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCC05",
+    vehicleType: "C - Car",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "Free Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "12", sat: "12", sunPh: "Free Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCM05",
+    vehicleType: "M - Motorcycle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "Free Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "65c/ day", sat: "65c/ day", sunPh: "Free Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCC06",
+    vehicleType: "C - Car",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "60c/ 30min", sat: "60c/30min", sunPh: "60c/30min" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "12", sat: "12", sunPh: "12" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCH06",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "120c/ 30min" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "24", sat: "24", sunPh: "24" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCM06",
+    vehicleType: "M - Motorcycle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "0.10/30min", sat: "0.10/30min", sunPh: "0.10/30min" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "65c/ day", sat: "65c/ day", sunPh: "65c/ day" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCH07",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0700 to 2230", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Reserved Parking" },
+      { opHours: "0700 to 2230", mode: "Day Capped rate (if any)", monFri: "24", sat: "24", sunPh: "Reserved Parking" },
+      { opHours: "2230 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "2230 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCH08",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0700 to 1900", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Reserved Parking" },
+      { opHours: "0700 to 1900", mode: "Day Capped rate (if any)", monFri: "24", sat: "24", sunPh: "Reserved Parking" },
+      { opHours: "1900 to 0700", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "1900 to 0700", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+  {
+    tariffId: "JTCH09",
+    vehicleType: "H - Heavy Vehicle",
+    rows: [
+      { opHours: "0730 to 1900", mode: "Short-term rate", monFri: "120c/ 30min", sat: "120c/ 30min", sunPh: "Reserved Parking" },
+      { opHours: "0730 to 1900", mode: "Day Capped rate (if any)", monFri: "24", sat: "24", sunPh: "Reserved Parking" },
+      { opHours: "1900 to 0730", mode: "Short-term rate", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+      { opHours: "1900 to 0730", mode: "Night Capped rate (if any)", monFri: "Reserved Parking", sat: "Reserved Parking", sunPh: "Reserved Parking" },
+    ],
+  },
+];
+
+const SEED_CAR_PARKS = [
+  { carParkNo: "A1004", address: "Ang Mo Kio JTC Industrial Park 2 (HV)", tariffCar: "JTCC01", tariffMc: "JTCM01", tariffHv: "JTCH01" },
+  { carParkNo: "A1003", address: "Ang Mo Kio JTC Industrial Park 2", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH01" },
+  { carParkNo: "A1002", address: "Ang Mo Kio JTC Industrial Park 1", tariffCar: "JTCC03", tariffMc: "JTCM02", tariffHv: "JTCH02" },
+  { carParkNo: "A1000", address: "Alexandra Village JTC Industrial Park", tariffCar: "JTCC04", tariffMc: "JTCM03", tariffHv: "JTCH03" },
+  { carParkNo: "D1000", address: "Depot Lane JTC Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH04" },
+  { carParkNo: "E1000", address: "Eunos JTC Industrial Estate", tariffCar: "JTCC03", tariffMc: "JTCM04", tariffHv: "JTCH02" },
+  { carParkNo: "A1001", address: "Aljunied Ave JTC Industrial Park", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH05" },
+  { carParkNo: "U1001", address: "Ubi JTC Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "" },
+  { carParkNo: "J1000", address: "JTC Ubi Ave 4", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "" },
+  { carParkNo: "D1010", address: "Defu JTC Industrial Estate Lane 10", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH02" },
+  { carParkNo: "D1007", address: "Defu JTC Industrial Estate Lane 7", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "D1008", address: "Defu JTC Industrial Estate Lane 8", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "D1009", address: "Defu JTC Industrial Estate Lane 9", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "D1011", address: "Defu JTC Industrial Estate Lane 11", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "D1012", address: "Defu JTC Industrial Estate Lane 12", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH06" },
+  { carParkNo: "D1001", address: "Defu JTC Industrial Estate Lane 1", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "D1002", address: "Defu JTC Industrial Estate Lane 2", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "D1003", address: "Defu JTC Industrial Estate Lane 3", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "D1005", address: "Defu JTC Industrial Estate Lane 5", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "D1006", address: "Defu JTC Industrial Estate Lane 6", tariffCar: "JTCC06", tariffMc: "JTCM06", tariffHv: "JTCH06" },
+  { carParkNo: "Y1000", address: "Yishun JTC Industrial Park A", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH02" },
+  { carParkNo: "G1000", address: "Geylang Bahru JTC Industrial Estate", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH07" },
+  { carParkNo: "T1000", address: "Toa Payoh JTC Industrial Park Blk1", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "" },
+  { carParkNo: "T1001", address: "Toa Payoh JTC Industrial Park Blk1002", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "" },
+  { carParkNo: "T1002", address: "Toa Payoh JTC Industrial Park Blk1003", tariffCar: "JTCC02", tariffMc: "JTCM02", tariffHv: "JTCH02" },
+  { carParkNo: "M1000", address: "Marsiling JTC Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH02" },
+  { carParkNo: "W1000", address: "Woodlands JTC Industrial Park E", tariffCar: "JTCC06", tariffMc: "", tariffHv: "JTCH08" },
+  { carParkNo: "S1000", address: "Sin Ming JTC Industrial Estate", tariffCar: "JTCC05", tariffMc: "JTCM05", tariffHv: "JTCH09" },
 ];
 
 function newRow() {
@@ -817,8 +1053,8 @@ export default function App() {
     { userId: "admin", password: "admin", role: "admin", mustChangePassword: true },
   ]);
   const [currentUser, setCurrentUser] = useState(null);
-  const [tariffs, setTariffs] = useState([]);
-  const [carParks, setCarParks] = useState(SAMPLE_CAR_PARKS);
+  const [tariffs, setTariffs] = useState(SEED_TARIFFS);
+  const [carParks, setCarParks] = useState(SEED_CAR_PARKS);
   const [page, setPage] = useState("tariff");
 
   if (!currentUser) {
