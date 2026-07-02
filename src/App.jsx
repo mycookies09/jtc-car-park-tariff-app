@@ -4,7 +4,7 @@ import { openOrInitDb, readState, writeState, persist, exportBytes, createDb } f
 const NL = String.fromCharCode(10);
 
 const DEFAULT_USERS = [
-  { userId: "fems", password: "P@ssw0rd1", role: "user", mustChangePassword: true },
+  { userId: "fem", password: "P@ssw0rd1", role: "user", mustChangePassword: true },
   { userId: "admin", password: "admin", role: "admin", mustChangePassword: true },
 ];
 
@@ -424,7 +424,7 @@ function LoginPage({ users, onLogin }) {
         <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 20px" }}>Tariff management MVP. Sign in to continue.</p>
         <Banner kind="error" onClose={() => setError("")}>{error}</Banner>
         <label style={labelStyle}>User ID</label>
-        <input style={inputStyle} value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="fems" />
+        <input style={inputStyle} value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="fem" />
         <div style={{ height: 14 }} />
         <label style={labelStyle}>Password</label>
         <input type="password" style={inputStyle} value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} placeholder="••••••••" />
