@@ -1090,7 +1090,7 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const db = await openOrInitDb(DEFAULT_USERS, SEED_TARIFFS, SEED_CAR_PARKS);
+      const db = await openOrInitDb(DEFAULT_USERS, SEED_TARIFFS, SEED_CAR_PARKS, import.meta.env.BASE_URL + "data/jtc-car-park-tariff.sqlite");
       if (cancelled) return;
       dbRef.current = db;
       const state = readState(db);

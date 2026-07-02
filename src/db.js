@@ -76,11 +76,26 @@ export async function createDb(bytes) {
   return bytes ? new SQL.Database(bytes) : new SQL.Database();
 }
 
-export async function openOrInitDb(defaultUsers, seedTariffs, seedCarParks) {
+export async function openOrInitDb(defaultUsers, seedTariffs, seedCarParks, seedDbUrl) {
   const bytes = await loadPersistedBytes();
   if (bytes) {
     return createDb(bytes);
   }
+
+  if (seedDbUrl) {
+    try {
+      const resp = await fetch(seedDbUrl);
+      if (resp.ok) {
+        const fetched = new Uint8Array(await resp.arrayBuffer());
+        const db = await createDb(fetched);
+        await savePersistedBytes(db.export());
+        return db;
+      }
+    } catch (e) {
+      // network/file unavailable — fall through to the built-in seed below
+    }
+  }
+
   const db = await createDb();
   db.run(SCHEMA);
   writeState(db, defaultUsers, seedTariffs, seedCarParks);
