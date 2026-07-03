@@ -346,6 +346,32 @@ function metadataKey(tariff) {
   return (tariff.vehicleType || "").trim() + "\u2016" + rowsKey;
 }
 
+function tariffFieldFor(vehicleType) {
+  if (vehicleType === "C - Car") return "tariffCar";
+  if (vehicleType === "M - Motorcycle") return "tariffMc";
+  if (vehicleType === "H - Heavy Vehicle") return "tariffHv";
+  return null;
+}
+
+function vehicleLetter(vehicleType) {
+  if (vehicleType === "C - Car") return "C";
+  if (vehicleType === "M - Motorcycle") return "M";
+  if (vehicleType === "H - Heavy Vehicle") return "H";
+  return "X";
+}
+
+function nextTariffId(vehicleType, tariffs) {
+  const prefix = "JTC" + vehicleLetter(vehicleType);
+  let max = 0;
+  tariffs.forEach((t) => {
+    if (t.tariffId.startsWith(prefix)) {
+      const n = parseInt(t.tariffId.slice(prefix.length), 10);
+      if (!isNaN(n) && n > max) max = n;
+    }
+  });
+  return prefix + String(max + 1).padStart(3, "0");
+}
+
 const inputStyle = {
   width: "100%",
   padding: "8px 10px",
@@ -637,12 +663,12 @@ function TariffPage({ tariffs, setTariffs, carParks }) {
   );
 }
 
-function CarParkPage({ tariffs, carParks, setCarParks }) {
+function CarParkPage({ tariffs, setTariffs, carParks, setCarParks }) {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedNo, setSelectedNo] = useState("");
-  const [draft, setDraft] = useState({ tariffCar: "", tariffMc: "", tariffHv: "" });
-  const [success, setSuccess] = useState("");
+  const [rateDrafts, setRateDrafts] = useState({});
+  const [messages, setMessages] = useState({});
   const [outputType, setOutputType] = useState("URA Excel Output");
 
   const selected = carParks.find((c) => c.carParkNo === selectedNo);
@@ -653,25 +679,60 @@ function CarParkPage({ tariffs, carParks, setCarParks }) {
     return carParks.filter((c) => c.carParkNo.toLowerCase().includes(q) || c.address.toLowerCase().includes(q));
   }, [search, carParks]);
 
-  const carTariffs = tariffs.filter((t) => t.vehicleType === "C - Car");
-  const mcTariffs = tariffs.filter((t) => t.vehicleType === "M - Motorcycle");
-  const hvTariffs = tariffs.filter((t) => t.vehicleType === "H - Heavy Vehicle");
+  function tariffById(id) {
+    return tariffs.find((t) => t.tariffId === id);
+  }
 
   function selectCarPark(c) {
     setSelectedNo(c.carParkNo);
     setSearch(c.carParkNo + " — " + c.address);
     setOpen(false);
-    setDraft({ tariffCar: c.tariffCar || "", tariffMc: c.tariffMc || "", tariffHv: c.tariffHv || "" });
-    setSuccess("");
+    const drafts = {};
+    VEHICLE_TYPES.forEach((vt) => {
+      const tid = c[tariffFieldFor(vt)];
+      const t = tid ? tariffById(tid) : null;
+      drafts[vt] = t ? t.rows.map((r) => ({ ...r })) : [];
+    });
+    setRateDrafts(drafts);
+    setMessages({});
   }
 
-  function saveTagging() {
-    setCarParks((prev) => prev.map((c) => (c.carParkNo === selectedNo ? { ...c, ...draft } : c)));
-    setSuccess("Tagging saved for " + selectedNo + ".");
+  function updateDraftRow(vt, idx, field, value) {
+    setRateDrafts((prev) => ({ ...prev, [vt]: prev[vt].map((r, i) => (i === idx ? { ...r, [field]: value } : r)) }));
   }
 
-  function tariffById(id) {
-    return tariffs.find((t) => t.tariffId === id);
+  function addDraftRow(vt) {
+    setRateDrafts((prev) => ({ ...prev, [vt]: [...prev[vt], newRow()] }));
+  }
+
+  function removeDraftRow(vt, idx) {
+    setRateDrafts((prev) => ({ ...prev, [vt]: prev[vt].filter((_, i) => i !== idx) }));
+  }
+
+  function saveRates(vt) {
+    const field = tariffFieldFor(vt);
+    const rows = rateDrafts[vt];
+    setMessages((prev) => ({ ...prev, [vt]: "" }));
+
+    if (rows.length === 0) {
+      setCarParks((prev) => prev.map((c) => (c.carParkNo === selectedNo ? { ...c, [field]: "" } : c)));
+      setMessages((prev) => ({ ...prev, [vt]: "No rate rows — marked as Not Applicable for " + vt + "." }));
+      return;
+    }
+
+    const candidate = { vehicleType: vt, rows: rows.map((r) => ({ ...r })) };
+    const key = metadataKey(candidate);
+    const match = tariffs.find((t) => metadataKey(t) === key);
+
+    if (match) {
+      setCarParks((prev) => prev.map((c) => (c.carParkNo === selectedNo ? { ...c, [field]: match.tariffId } : c)));
+      setMessages((prev) => ({ ...prev, [vt]: "Rate matches existing tariff '" + match.tariffId + "' — tagged." }));
+    } else {
+      const newId = nextTariffId(vt, tariffs);
+      setTariffs((prev) => [...prev, { tariffId: newId, vehicleType: vt, rows: rows.map((r) => ({ ...r })) }]);
+      setCarParks((prev) => prev.map((c) => (c.carParkNo === selectedNo ? { ...c, [field]: newId } : c)));
+      setMessages((prev) => ({ ...prev, [vt]: "New tariff '" + newId + "' created and tagged." }));
+    }
   }
 
   function buildUraRows() {
@@ -770,22 +831,12 @@ function CarParkPage({ tariffs, carParks, setCarParks }) {
     else if (outputType === "Car Park New Hourly Charges Output") downloadCsv("car_park_new_hourly_charges.csv", buildHourlyChargesRows());
   }
 
-  const tariffSelect = (value, onChange, list, label) => (
-    <div style={{ flex: "1 1 200px" }}>
-      <label style={labelStyle}>{label}</label>
-      <select style={inputStyle} value={value} onChange={(e) => onChange(e.target.value)}>
-        <option value="">— none —</option>
-        {list.map((t) => <option key={t.tariffId} value={t.tariffId}>{t.tariffId}</option>)}
-      </select>
-    </div>
-  );
+  const cellStyle = { padding: "6px", border: "1px solid " + COLORS.border, fontSize: 13 };
 
   return (
     <div>
-      <h2 style={{ fontSize: 18, color: COLORS.primary, margin: "0 0 4px" }}>Car park information & tariff tagging</h2>
-      <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 18px" }}>Search a car park, tag one tariff per vehicle type, then download outputs.</p>
-
-      <Banner kind="success" onClose={() => setSuccess("")}>{success}</Banner>
+      <h2 style={{ fontSize: 18, color: COLORS.primary, margin: "0 0 4px" }}>Car park information & rates</h2>
+      <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 18px" }}>Search a car park, then view or edit its rates per vehicle type. Saving a rate automatically reuses a matching tariff or creates a new one.</p>
 
       <div style={{ background: COLORS.panel, borderRadius: 10, padding: 18, marginBottom: 22 }}>
         <label style={labelStyle}>Car park no. (search by number or address)</label>
@@ -813,21 +864,69 @@ function CarParkPage({ tariffs, carParks, setCarParks }) {
           <div style={{ marginTop: 16 }}>
             <label style={labelStyle}>Address / parking place</label>
             <div style={{ ...inputStyle, background: "#F4F7FB", color: COLORS.muted }}>{selected.address}</div>
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 16 }}>
-              {tariffSelect(draft.tariffCar, (v) => setDraft((d) => ({ ...d, tariffCar: v })), carTariffs, "Tariff for Car")}
-              {tariffSelect(draft.tariffMc, (v) => setDraft((d) => ({ ...d, tariffMc: v })), mcTariffs, "Tariff for Motorcycle")}
-              {tariffSelect(draft.tariffHv, (v) => setDraft((d) => ({ ...d, tariffHv: v })), hvTariffs, "Tariff for Heavy Vehicle")}
-            </div>
-            <div style={{ marginTop: 16 }}>
-              <Button variant="teal" onClick={saveTagging}>Save tagging</Button>
-            </div>
           </div>
         ) : (
-          <p style={{ fontSize: 13, color: COLORS.muted, marginTop: 14, marginBottom: 0 }}>Select a car park to tag tariffs.</p>
+          <p style={{ fontSize: 13, color: COLORS.muted, marginTop: 14, marginBottom: 0 }}>Select a car park to view or edit its rates.</p>
         )}
       </div>
 
-      <h3 style={{ fontSize: 15, color: COLORS.text, margin: "0 0 10px" }}>Car park tagging overview</h3>
+      {selected ? VEHICLE_TYPES.map((vt) => {
+        const currentId = selected[tariffFieldFor(vt)];
+        const rows = rateDrafts[vt] || [];
+        return (
+          <div key={vt} style={{ background: COLORS.panel, borderRadius: 10, padding: 18, marginBottom: 18 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
+              <h3 style={{ fontSize: 15, color: COLORS.text, margin: 0 }}>{vt}</h3>
+              <span style={{ fontSize: 12.5, color: COLORS.muted }}>{currentId ? "Currently tariff " + currentId : "Not Applicable"}</span>
+            </div>
+            <Banner kind="success" onClose={() => setMessages((prev) => ({ ...prev, [vt]: "" }))}>{messages[vt]}</Banner>
+
+            {rows.length === 0 ? (
+              <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 12px" }}>No rate set — Not Applicable.</p>
+            ) : (
+              <div style={{ overflowX: "auto", background: "#fff", borderRadius: 6, border: "1px solid " + COLORS.border, marginBottom: 12 }}>
+                <table style={{ borderCollapse: "collapse", width: "100%", minWidth: 720 }}>
+                  <thead>
+                    <tr style={{ background: "#F0F5FC" }}>
+                      <th style={cellStyle}>Operating hours</th>
+                      <th style={cellStyle}>Mode of charges</th>
+                      <th style={cellStyle}>Mon - Fri</th>
+                      <th style={cellStyle}>Sat</th>
+                      <th style={cellStyle}>Sun / PH</th>
+                      <th style={cellStyle}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((r, i) => (
+                      <tr key={i}>
+                        <td style={cellStyle}><input style={{ ...inputStyle, padding: "6px 8px" }} value={r.opHours} onChange={(e) => updateDraftRow(vt, i, "opHours", e.target.value)} placeholder="0700 to 2230" /></td>
+                        <td style={cellStyle}>
+                          <select style={{ ...inputStyle, padding: "6px 8px" }} value={r.mode} onChange={(e) => updateDraftRow(vt, i, "mode", e.target.value)}>
+                            {MODES.map((m) => <option key={m} value={m}>{m}</option>)}
+                          </select>
+                        </td>
+                        <td style={cellStyle}><input style={{ ...inputStyle, padding: "6px 8px" }} value={r.monFri} onChange={(e) => updateDraftRow(vt, i, "monFri", e.target.value)} placeholder="60c / 30min" /></td>
+                        <td style={cellStyle}><input style={{ ...inputStyle, padding: "6px 8px" }} value={r.sat} onChange={(e) => updateDraftRow(vt, i, "sat", e.target.value)} /></td>
+                        <td style={cellStyle}><input style={{ ...inputStyle, padding: "6px 8px" }} value={r.sunPh} onChange={(e) => updateDraftRow(vt, i, "sunPh", e.target.value)} /></td>
+                        <td style={{ ...cellStyle, textAlign: "center" }}>
+                          <span onClick={() => removeDraftRow(vt, i)} style={{ cursor: "pointer", color: COLORS.danger, fontWeight: 700 }} title="Remove row">×</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: 10 }}>
+              <Button variant="ghost" onClick={() => addDraftRow(vt)}>+ Add row</Button>
+              <Button variant="teal" onClick={() => saveRates(vt)}>Save rate</Button>
+            </div>
+          </div>
+        );
+      }) : null}
+
+      <h3 style={{ fontSize: 15, color: COLORS.text, margin: "0 0 10px" }}>Car park rates overview</h3>
       <div style={{ overflowX: "auto", marginBottom: 26 }}>
         <table style={{ borderCollapse: "collapse", width: "100%", minWidth: 640, fontSize: 13 }}>
           <thead>
@@ -932,7 +1031,7 @@ function ManageCarParksPage({ carParks, setCarParks }) {
   return (
     <div>
       <h2 style={{ fontSize: 18, color: COLORS.primary, margin: "0 0 4px" }}>{editingNo === null ? "Add car park" : "Edit car park — " + editingNo}</h2>
-      <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 18px" }}>Car Park No is the primary key and must be unique. Tariff tagging is done on the Car parks &amp; outputs page.</p>
+      <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 18px" }}>Car Park No is the primary key and must be unique. Rates are edited on the Car parks &amp; outputs page.</p>
 
       <Banner kind="error" onClose={() => setError("")}>{error}</Banner>
       <Banner kind="success" onClose={() => setSuccess("")}>{success}</Banner>
@@ -1104,7 +1203,7 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [tariffs, setTariffs] = useState([]);
   const [carParks, setCarParks] = useState([]);
-  const [page, setPage] = useState("tariff");
+  const [page, setPage] = useState("carpark");
 
   useEffect(() => {
     let cancelled = false;
@@ -1171,7 +1270,7 @@ export default function App() {
   }
 
   if (!currentUser) {
-    return <LoginPage users={users} onLogin={(u) => { setCurrentUser(u); setPage("tariff"); }} />;
+    return <LoginPage users={users} onLogin={(u) => { setCurrentUser(u); setPage(u.role === "admin" ? "tariff" : "carpark"); }} />;
   }
 
   if (currentUser.mustChangePassword) {
@@ -1179,7 +1278,7 @@ export default function App() {
   }
 
   const navItems = [
-    { key: "tariff", label: "Tariff creation" },
+    ...(currentUser.role === "admin" ? [{ key: "tariff", label: "Tariffs (admin)" }] : []),
     { key: "manage", label: "Manage car parks" },
     { key: "carpark", label: "Car parks & outputs" },
     { key: "account", label: "Account" },
@@ -1217,9 +1316,9 @@ export default function App() {
           MVP build. Data is saved automatically to a SQLite database in this browser and survives page reloads. Use Account → Database to download a portable .sqlite backup or load one on another machine. MVP assumptions: URA day-codes 1–5 use Mon-Fri values, 6 = Sat, 7 = Sun/PH; first two short-term rows map to bands 1 and 2 (extra short-term rows ignored); cap times derive from the capped row's own operating hours; the hourly-charges narrative shows the Mon-Fri value.
         </div>
 
-        {page === "tariff" ? <TariffPage tariffs={tariffs} setTariffs={setTariffs} carParks={carParks} /> : null}
+        {page === "tariff" && currentUser.role === "admin" ? <TariffPage tariffs={tariffs} setTariffs={setTariffs} carParks={carParks} /> : null}
         {page === "manage" ? <ManageCarParksPage carParks={carParks} setCarParks={setCarParks} /> : null}
-        {page === "carpark" ? <CarParkPage tariffs={tariffs} carParks={carParks} setCarParks={setCarParks} /> : null}
+        {page === "carpark" ? <CarParkPage tariffs={tariffs} setTariffs={setTariffs} carParks={carParks} setCarParks={setCarParks} /> : null}
         {page === "account" ? <AccountPage currentUser={currentUser} users={users} setUsers={setUsers} onExportDb={handleExportDb} onImportDb={handleImportDb} onResetToSeed={handleResetToSeed} /> : null}
       </div>
     </div>
