@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { openOrInitDb, readState, writeState, persist, exportBytes, createDb } from "./db";
+import { openOrInitDb, readState, writeState, persist, exportBytes, createDb, fetchSeedDb } from "./db";
 
 const NL = String.fromCharCode(10);
 
@@ -7,6 +7,8 @@ const DEFAULT_USERS = [
   { userId: "fem", password: "P@ssw0rd1", role: "user", mustChangePassword: true },
   { userId: "admin", password: "admin", role: "admin", mustChangePassword: true },
 ];
+
+const SEED_DB_URL = import.meta.env.BASE_URL + "data/jtc-car-park-tariff.sqlite";
 
 const COLORS = {
   primary: "#0057B8",
@@ -988,7 +990,7 @@ function ManageCarParksPage({ carParks, setCarParks }) {
   );
 }
 
-function AccountPage({ currentUser, users, setUsers, onExportDb, onImportDb }) {
+function AccountPage({ currentUser, users, setUsers, onExportDb, onImportDb, onResetToSeed }) {
   const isAdmin = currentUser.role === "admin";
   const [oldPw, setOldPw] = useState("");
   const [newPw, setNewPw] = useState("");
@@ -998,6 +1000,7 @@ function AccountPage({ currentUser, users, setUsers, onExportDb, onImportDb }) {
   const [resetPw, setResetPw] = useState("");
   const [resetMsg, setResetMsg] = useState("");
   const [importMsg, setImportMsg] = useState("");
+  const [seedMsg, setSeedMsg] = useState("");
 
   function handleImportFile(e) {
     const file = e.target.files && e.target.files[0];
@@ -1006,6 +1009,12 @@ function AccountPage({ currentUser, users, setUsers, onExportDb, onImportDb }) {
     if (!window.confirm("Loading a database file replaces all current tariffs, car parks and user accounts, and will sign you out. Continue?")) return;
     setImportMsg("Loading…");
     onImportDb(file).catch(() => setImportMsg("Could not read that file. Make sure it's a .sqlite database exported from this app."));
+  }
+
+  function handleResetToSeed() {
+    if (!window.confirm("This replaces all current tariffs, car parks and user accounts in this browser with the latest baseline from GitHub, and signs you out. Continue?")) return;
+    setSeedMsg("Loading…");
+    onResetToSeed().catch(() => setSeedMsg("Could not fetch the latest baseline. Check your connection and try again."));
   }
 
   function changeOwn() {
@@ -1056,6 +1065,16 @@ function AccountPage({ currentUser, users, setUsers, onExportDb, onImportDb }) {
             <input type="file" accept=".sqlite,.db" onChange={handleImportFile} style={{ fontSize: 13 }} />
           </div>
         ) : null}
+        {isAdmin ? (
+          <div style={{ marginTop: 16 }}>
+            <label style={labelStyle}>Reset to latest baseline — admin only</label>
+            <p style={{ fontSize: 12, color: COLORS.muted, margin: "0 0 8px", lineHeight: 1.4 }}>
+              This browser keeps its own saved copy of the data and won't pick up updates pushed to GitHub on its own. Use this to discard local changes and re-fetch the latest committed dataset.
+            </p>
+            <Banner kind="error" onClose={() => setSeedMsg("")}>{seedMsg}</Banner>
+            <Button variant="ghost" onClick={handleResetToSeed}>Reset to latest baseline</Button>
+          </div>
+        ) : null}
       </div>
 
       {isAdmin ? (
@@ -1090,7 +1109,7 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const db = await openOrInitDb(DEFAULT_USERS, SEED_TARIFFS, SEED_CAR_PARKS, import.meta.env.BASE_URL + "data/jtc-car-park-tariff.sqlite");
+      const db = await openOrInitDb(DEFAULT_USERS, SEED_TARIFFS, SEED_CAR_PARKS, SEED_DB_URL);
       if (cancelled) return;
       dbRef.current = db;
       const state = readState(db);
@@ -1125,6 +1144,16 @@ export default function App() {
   async function handleImportDb(file) {
     const bytes = new Uint8Array(await file.arrayBuffer());
     const db = await createDb(bytes);
+    const state = readState(db);
+    dbRef.current = db;
+    setUsers(state.users);
+    setTariffs(state.tariffs);
+    setCarParks(state.carParks);
+    setCurrentUser(null);
+  }
+
+  async function handleResetToSeed() {
+    const db = await fetchSeedDb(SEED_DB_URL);
     const state = readState(db);
     dbRef.current = db;
     setUsers(state.users);
@@ -1191,7 +1220,7 @@ export default function App() {
         {page === "tariff" ? <TariffPage tariffs={tariffs} setTariffs={setTariffs} carParks={carParks} /> : null}
         {page === "manage" ? <ManageCarParksPage carParks={carParks} setCarParks={setCarParks} /> : null}
         {page === "carpark" ? <CarParkPage tariffs={tariffs} carParks={carParks} setCarParks={setCarParks} /> : null}
-        {page === "account" ? <AccountPage currentUser={currentUser} users={users} setUsers={setUsers} onExportDb={handleExportDb} onImportDb={handleImportDb} /> : null}
+        {page === "account" ? <AccountPage currentUser={currentUser} users={users} setUsers={setUsers} onExportDb={handleExportDb} onImportDb={handleImportDb} onResetToSeed={handleResetToSeed} /> : null}
       </div>
     </div>
   );

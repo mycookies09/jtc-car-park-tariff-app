@@ -76,6 +76,15 @@ export async function createDb(bytes) {
   return bytes ? new SQL.Database(bytes) : new SQL.Database();
 }
 
+export async function fetchSeedDb(seedDbUrl) {
+  const resp = await fetch(seedDbUrl, { cache: "no-store" });
+  if (!resp.ok) throw new Error("Seed database fetch failed: " + resp.status);
+  const bytes = new Uint8Array(await resp.arrayBuffer());
+  const db = await createDb(bytes);
+  await savePersistedBytes(db.export());
+  return db;
+}
+
 export async function openOrInitDb(defaultUsers, seedTariffs, seedCarParks, seedDbUrl) {
   const bytes = await loadPersistedBytes();
   if (bytes) {
@@ -84,13 +93,7 @@ export async function openOrInitDb(defaultUsers, seedTariffs, seedCarParks, seed
 
   if (seedDbUrl) {
     try {
-      const resp = await fetch(seedDbUrl);
-      if (resp.ok) {
-        const fetched = new Uint8Array(await resp.arrayBuffer());
-        const db = await createDb(fetched);
-        await savePersistedBytes(db.export());
-        return db;
-      }
+      return await fetchSeedDb(seedDbUrl);
     } catch (e) {
       // network/file unavailable — fall through to the built-in seed below
     }
