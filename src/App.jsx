@@ -663,6 +663,75 @@ function TariffPage({ tariffs, setTariffs, carParks }) {
   );
 }
 
+function TariffViewPage({ tariffs, carParks }) {
+  const [search, setSearch] = useState("");
+
+  function assignedCount(id) {
+    return carParks.filter((c) => c.tariffCar === id || c.tariffMc === id || c.tariffHv === id).length;
+  }
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return tariffs;
+    return tariffs.filter((t) => t.tariffId.toLowerCase().includes(q) || t.vehicleType.toLowerCase().includes(q));
+  }, [search, tariffs]);
+
+  const cellStyle = { padding: "6px 8px", border: "1px solid " + COLORS.border, fontSize: 13 };
+
+  return (
+    <div>
+      <h2 style={{ fontSize: 18, color: COLORS.primary, margin: "0 0 4px" }}>Tariffs</h2>
+      <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 18px" }}>Read-only view of all tariffs. Rates are edited from the Car parks &amp; outputs page.</p>
+
+      <div style={{ marginBottom: 18, maxWidth: 420 }}>
+        <label style={labelStyle}>Search by tariff ID or vehicle type</label>
+        <input style={inputStyle} value={search} onChange={(e) => setSearch(e.target.value)} placeholder="e.g. JTCC001 or Car" />
+      </div>
+
+      <p style={{ fontSize: 13, color: COLORS.muted, margin: "0 0 14px" }}>{filtered.length} of {tariffs.length} tariff(s)</p>
+
+      {filtered.length === 0 ? (
+        <p style={{ fontSize: 13, color: COLORS.muted }}>No tariffs found.</p>
+      ) : (
+        <div style={{ display: "grid", gap: 12 }}>
+          {filtered.map((t) => (
+            <div key={t.tariffId} style={{ border: "1px solid " + COLORS.border, borderRadius: 8, padding: 14, background: "#fff" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, flexWrap: "wrap", gap: 8 }}>
+                <span style={{ fontWeight: 700, color: COLORS.primary, fontSize: 14.5 }}>{t.tariffId}</span>
+                <span style={{ fontSize: 12.5, color: COLORS.muted }}>{t.vehicleType} · assigned to {assignedCount(t.tariffId)} car park(s)</span>
+              </div>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ borderCollapse: "collapse", width: "100%", minWidth: 640 }}>
+                  <thead>
+                    <tr style={{ background: "#F0F5FC" }}>
+                      <th style={cellStyle}>Operating hours</th>
+                      <th style={cellStyle}>Mode of charges</th>
+                      <th style={cellStyle}>Mon - Fri</th>
+                      <th style={cellStyle}>Sat</th>
+                      <th style={cellStyle}>Sun / PH</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {t.rows.map((r, i) => (
+                      <tr key={i}>
+                        <td style={cellStyle}>{r.opHours}</td>
+                        <td style={cellStyle}>{r.mode}</td>
+                        <td style={cellStyle}>{r.monFri}</td>
+                        <td style={cellStyle}>{r.sat}</td>
+                        <td style={cellStyle}>{r.sunPh}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function CarParkPage({ tariffs, setTariffs, carParks, setCarParks }) {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
@@ -1278,7 +1347,8 @@ export default function App() {
   }
 
   const navItems = [
-    ...(currentUser.role === "admin" ? [{ key: "tariff", label: "Tariffs (admin)" }] : []),
+    { key: "tariffView", label: "Tariffs" },
+    ...(currentUser.role === "admin" ? [{ key: "tariff", label: "Manage tariffs (admin)" }] : []),
     { key: "manage", label: "Manage car parks" },
     { key: "carpark", label: "Car parks & outputs" },
     { key: "account", label: "Account" },
@@ -1316,6 +1386,7 @@ export default function App() {
           MVP build. Data is saved automatically to a SQLite database in this browser and survives page reloads. Use Account → Database to download a portable .sqlite backup or load one on another machine. MVP assumptions: URA day-codes 1–5 use Mon-Fri values, 6 = Sat, 7 = Sun/PH; first two short-term rows map to bands 1 and 2 (extra short-term rows ignored); cap times derive from the capped row's own operating hours; the hourly-charges narrative shows the Mon-Fri value.
         </div>
 
+        {page === "tariffView" ? <TariffViewPage tariffs={tariffs} carParks={carParks} /> : null}
         {page === "tariff" && currentUser.role === "admin" ? <TariffPage tariffs={tariffs} setTariffs={setTariffs} carParks={carParks} /> : null}
         {page === "manage" ? <ManageCarParksPage carParks={carParks} setCarParks={setCarParks} /> : null}
         {page === "carpark" ? <CarParkPage tariffs={tariffs} setTariffs={setTariffs} carParks={carParks} setCarParks={setCarParks} /> : null}
